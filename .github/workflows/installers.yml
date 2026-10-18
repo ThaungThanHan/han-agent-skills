@@ -1,0 +1,34 @@
+name: Check installers
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            installer: bash
+          - os: ubuntu-latest
+            installer: bash
+          - os: windows-latest
+            installer: powershell
+          - os: windows-latest
+            installer: pwsh
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test installer behavior
+        env:
+          HAN_INSTALLER_SHELL: ${{ matrix.installer }}
+        run: python -m unittest discover -s tests -v

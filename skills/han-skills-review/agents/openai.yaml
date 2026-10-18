@@ -1,0 +1,4 @@
+interface:
+  display_name: "Han Skills Review"
+  short_description: "Review agent skills and prioritize practical fixes"
+  default_prompt: "Use $han-skills-review to review ./skills/han-learn for usefulness, reliability, and completeness, with evidence and prioritized improvements."

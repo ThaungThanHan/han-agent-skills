@@ -1,0 +1,4 @@
+interface:
+  display_name: "Han Learn"
+  short_description: "Save codebase lessons in .learn with how and why"
+  default_prompt: "Use $han-learn to save a new Markdown lesson in .learn/ teaching me this codebase's architecture, flows, and components with source-linked examples."
