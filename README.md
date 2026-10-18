@@ -11,14 +11,22 @@ My growing collection of Codex skills for personal projects and everyday work. G
 
 ## Quick install 🚀
 
-Clone or download this repo, open a terminal in its folder, and run:
+With Node.js installed, run this from any folder to install the skills for Codex across your projects:
+
+```bash
+npx skills add ThaungThanHan/han-agent-skills -g -a codex
+```
+
+To install just one skill, add `--skill han-learn` or `--skill han-skills-review`. The command fetches the skills from GitHub, so there is no need to clone the repo. See the [skills CLI](https://github.com/vercel-labs/skills) for other agents and update commands.
+
+If you downloaded the repo, you can also use the local scripts:
 
 | Platform | Install everything | Install one skill |
 | --- | --- | --- |
 | macOS / Linux | `./install.sh` | `./install.sh han-learn` |
 | Windows PowerShell | `.\install.ps1` | `.\install.ps1 han-learn` |
 
-Skills go into `~/.agents/skills`. Existing installations are skipped, so your local edits stay safe. Restart Codex if a skill doesn't show up.
+The local scripts put skills in `~/.agents/skills`. Existing installations are skipped, so your local edits stay safe. Restart Codex if a skill doesn't show up.
 
 Need a different destination? Run `./install.sh --help` or `.\install.ps1 -Help`.
 
