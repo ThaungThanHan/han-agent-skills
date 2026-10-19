@@ -1,0 +1,4 @@
+interface:
+  display_name: "unrust-me"
+  short_description: "Practice and review LeetCode solutions clearly"
+  default_prompt: "Use $unrustme create Two Sum in Python to start a practice problem, or $unrustme review to explain my solution."

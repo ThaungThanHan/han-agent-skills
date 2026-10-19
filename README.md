@@ -8,6 +8,7 @@ My growing collection of Codex skills for personal projects and everyday work. G
 | --- | --- |
 | [han-learn](HAN-LEARN.md) | Explains how a project works and why, with source links, Mermaid diagrams, and saved lessons. |
 | [han-skills-review](HAN-SKILLS-REVIEW.md) | Reviews a skill, scores its quality, and suggests practical improvements. |
+| [unrustme](skills/unrustme/SKILL.md) | Creates LeetCode practice scaffolds and reviews solutions with clear explanations. Efficient tool to unrust my brain. |
 
 ## Quick install 🚀
 
@@ -17,7 +18,7 @@ With Node.js installed, run this from any folder to install the skills for Codex
 npx skills add ThaungThanHan/han-agent-skills -g -a codex
 ```
 
-To install just one skill, add `--skill han-learn` or `--skill han-skills-review`. The command fetches the skills from GitHub, so there is no need to clone the repo. See the [skills CLI](https://github.com/vercel-labs/skills) for other agents and update commands.
+To install just one skill, add `--skill han-learn`, `--skill han-skills-review`, or `--skill unrustme`. The command fetches the skills from GitHub, so there is no need to clone the repo. See the [skills CLI](https://github.com/vercel-labs/skills) for other agents and update commands.
 
 If you downloaded the repo, you can also use the local scripts:
 
@@ -55,8 +56,13 @@ $han-learn how does authentication work?
 $han-learn ./packages/api
 
 $han-skills-review "$han-learn"
+
+$unrustme create Two Sum in Python
+$unrustme review Two Sum
 ```
 
 **han-learn** uses your current directory unless you name another target. Each request saves a new lesson in the target's `.learn/` folder, starting with a Mermaid architecture overview that GitHub can render.
 
 **han-skills-review** accepts a skill name or path and returns a review with prioritized fixes. It only edits the skill when you ask.
+
+**unrustme** finds problems on [LeetCode](https://leetcode.com/), following your requested title, difficulty, and topics. It stores each problem in `unrustme/<problem-id>-<slug>/` under your current directory. `create` asks for a language if needed, then makes a commented question and solution scaffold in a matching file such as `.py` or `.ts`; `review` writes feedback to that problem's `REVIEW.md`.
