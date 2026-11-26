@@ -13,7 +13,9 @@ Your task draft
       ↓
 Investigate the existing codebase
       ↓
-Write a task specification
+Write and save spec.md in .dev-docs/<task-id>/
+      ↓
+Show the approval summary in chat
       ↓
 YOU REVIEW AND APPROVE THE SPEC
       ↓
@@ -23,11 +25,7 @@ Run applicable checks and inspect the results
       ↓
 Compare the real code before and after
       ↓
-Assess change impact (Low / Medium / High / Critical)
-      ↓
-Explain high-impact changes first and in greater depth
-      ↓
-Write implementation and learning documents
+Save implementation.md and learning.md beside spec.md (default)
       ↓
 Ask questions, revisit concepts, and keep learning
 ```
@@ -42,24 +40,7 @@ Ask questions, revisit concepts, and keep learning
 | `implementation.md` | **What was actually built:** files changed, verification results, deviations, and remaining limitations. |
 | `learning.md` | **What you should understand:** real before/after code, execution flow, design reasoning, trade-offs, and optional understanding checks. |
 
-Documents are separate so that the *plan* is never confused with the *implemented result*. Learning explanations are based on inspected source and actual changes, not invented snippets or unverified test claims. **Impact levels** help Han Dev focus your reading time on changes that matter most.
-
-## Impact-first learning
-
-After implementation, Han Dev assesses **what each meaningful code change can affect**. High-impact changes receive deeper explanations, not merely more technical jargon.
-
-| Impact | Example | Explanation depth |
-| --- | --- | --- |
-| **Low** | Copy or isolated visual change | Short summary and checks |
-| **Medium** | A bounded feature behavior change | Before/after and one walkthrough |
-| **High** | Shared authentication/session logic, API contracts, data flows or concurrency | Detailed flow, real code excerpts, affected callers, edge cases, trade-offs, and verification |
-| **Critical** | Credible exposure, authorization bypass, irreversible data loss or serious service interruption | High-level depth plus safeguards, recovery/rollback and explicit verification limits |
-
-Examples are illustrative; impact must be justified from the actual repository, not assigned based on filenames or lines changed. The spec includes an **initial predicted impact**; after implementation, the documentation reports **actual observed change impact**. Passing tests improves confidence but doesn't lower the impact level.
-
-For example, ask:
-
-> `han-dev explain: Focus on the high-impact authentication changes and why they need extra safeguards.`
+Documents are separate so that the *plan* is never confused with the *implemented result*. Learning explanations are based on inspected source and actual changes, not invented snippets or unverified test claims.
 
 ## Getting started
 
@@ -89,7 +70,7 @@ Han Dev first examines the relevant project code and prepares a specification. *
 
 ### 3. Review and approve the specification
 
-Read the requirements, approach, assumptions, and acceptance criteria. You can request revisions:
+Read the generated `spec.md` (or the chat specification if you selected `--spec=chat`), including requirements, approach, assumptions, and acceptance criteria. You can request revisions:
 
 > `Revise spec v1: search should match opportunity titles only, not descriptions.`
 
@@ -101,7 +82,7 @@ Han Dev implements that approved scope, runs feasible checks, inspects the task-
 
 ### 4. Learn from the change
 
-Read `learning.md` for a guided explanation of the actual implementation. Then ask follow-up questions, for example:
+By default, read `.dev-docs/<task-id>/learning.md` for a guided explanation of the actual implementation. Then ask follow-up questions, for example:
 
 > `han-dev ask: Why is the search term included in the TanStack Query key?`
 
@@ -127,28 +108,52 @@ These are **example intents**, not guaranteed CLI subcommands. Actual invocation
 
 You can also request *spec-only*, *explanation-only*, or *diff-only* assistance without triggering the entire workflow.
 
-## Where the documents go
+## Choosing chat or Markdown output
 
-Han Dev **does not automatically place learning files inside your application repository**. When saving is available, it prefers:
+Han Dev separates how it presents the **specification** from how it presents the **post-implementation teaching**. You can set these options in your task request; they are instructions interpreted by the skill, not native VS Code CLI flags.
 
-1. An explicitly configured Han Learn storage tool or external project library.
-2. Another destination you explicitly provide.
-3. Otherwise, readable documents in chat until a destination is chosen.
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--spec=chat` | No | Show the reviewable specification in chat and ask for approval. No `spec.md` is created. |
+| `--spec=markdown` | **Yes** | Save `spec.md` in the task folder before implementation; show an approval summary in chat. |
+| `--spec=both` | No | Show the specification in chat and save it as Markdown. |
+| `--docs=markdown` | **Yes** | Automatically save `implementation.md` and `learning.md` after implementation and verification. |
+| `--docs=chat` | No | Explain what changed and teach the implementation in chat without saving post-implementation files. |
+| `--docs=both` | No | Save the documents and explain the implementation in chat. |
 
-For example, an external library could contain:
+**Normal usage — no flags necessary:**
+
+> `/han-dev Add search and status filters to the admin opportunities table.`
+
+Han Dev first saves the full specification to `.dev-docs/<task-id>/spec.md` and shows an approval summary in chat. After you approve it and implementation finishes, Han Dev **automatically saves** the implementation report and impact-aware learning lesson in that **same task folder**. You do not need to request documentation separately.
+
+**Other combinations:**
 
 ```text
-han-learn-library/
-└── projects/
-    └── todo-app-<stable-id>/
-        └── tasks/
-            └── 001-search-and-filter/
-                ├── spec.md
-                ├── implementation.md
-                └── learning.md
+/han-dev --spec=both --docs=both Implement search and filters
+/han-dev --spec=markdown --docs=chat Implement pagination
+/han-dev --docs=chat Fix the loading indicator
 ```
 
-No Han Learn extension, MCP server, or dashboard is required to use the skill. The external storage integration is optional, and Han Dev must not invent tool availability or saved-file locations.
+### Where Markdown documents go
+
+The default destination is a `.dev-docs/` directory **inside the selected project root**. Han Dev creates it if needed, as part of the default Markdown specification workflow. Each task gets its own subfolder to prevent overwriting other tasks.
+
+```text
+todo-app/
+├── src/
+└── .dev-docs/
+    └── 001-search-and-filters/
+        ├── spec.md
+        ├── implementation.md
+        └── learning.md
+```
+
+Both specification and post-implementation teaching default to Markdown, so all three files appear in **one shared task folder**. Override with `--spec=chat` to omit `spec.md`, or `--docs=chat` to omit the post-implementation files. The agent still shows a clear summary and requests explicit approval in chat, even when the full specification is saved as Markdown.
+
+You can explicitly request another output destination. No Han Learn extension, MCP server, or dashboard is required. If the coding agent lacks file-writing access, it must provide the documentation in chat and say that it could not save the files.
+
+The skill does not automatically update `.gitignore`; you can decide whether to commit `.dev-docs/` to source control.
 
 ## Important boundaries
 
@@ -170,7 +175,6 @@ An Agent Skill is a set of instructions for a compatible coding agent, **not** a
 | `references/specification-workflow.md` | How to investigate a task and write a testable specification. |
 | `references/implementation-verification.md` | How to implement safely and report checks. |
 | `references/change-analysis-and-teaching.md` | How to compare changes and teach them clearly. |
-| `references/impact-assessment.md` | Impact levels, prioritization, and deeper teaching for consequential changes. |
 | `references/qa-and-followups.md` | Code-grounded Q&A and prerequisite recovery. |
 | `references/storage-and-integrations.md` | Where and how task documents may be saved. |
 | `assets/` | Markdown templates for the three task documents. |
