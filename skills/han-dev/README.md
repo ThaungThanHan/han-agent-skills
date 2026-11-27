@@ -25,20 +25,21 @@ Run applicable checks and inspect the results
       ↓
 Compare the real code before and after
       ↓
-Save implementation.md and learning.md beside spec.md (default)
+Save implementation.md, code-walkthrough.md and learning.md beside spec.md (default)
       ↓
 Ask questions, revisit concepts, and keep learning
 ```
 
 **The approval step is required.** Han Dev must not edit application code, tests, configuration, or dependencies for a new task before you approve its specific specification. If implementation reveals a material scope change, it returns for approval of an amendment.
 
-### Three task documents
+### Four task documents
 
 | Document | Purpose |
 | --- | --- |
 | `spec.md` | **What should be built:** requirements, existing behavior, proposed approach, acceptance criteria, risks, and boundaries. |
 | `implementation.md` | **What was actually built:** files changed, verification results, deviations, and remaining limitations. |
-| `learning.md` | **What you should understand:** real before/after code, execution flow, design reasoning, trade-offs, and optional understanding checks. |
+| `code-walkthrough.md` | **How to read the changed code:** every task-owned addition, modification, and deletion, ordered **Critical → High → Medium → Low**, with real code blocks, before/after comparisons, source references, and careful explanations for High/Critical changes. |
+| `learning.md` | **What you should understand:** underlying concepts, mental models, architecture/design reasoning, trade-offs, and optional understanding checks. It links to the code walkthrough instead of duplicating it. |
 
 Documents are separate so that the *plan* is never confused with the *implemented result*. Learning explanations are based on inspected source and actual changes, not invented snippets or unverified test claims.
 
@@ -82,7 +83,7 @@ Han Dev implements that approved scope, runs feasible checks, inspects the task-
 
 ### 4. Learn from the change
 
-By default, read `.dev-docs/<task-id>/learning.md` for a guided explanation of the actual implementation. Then ask follow-up questions, for example:
+By default, read `.dev-docs/<task-id>/code-walkthrough.md` to study the **actual code, highest impact first**. Read `learning.md` for the underlying concepts and practice. Then ask follow-up questions, for example:
 
 > `han-dev ask: Why is the search term included in the TanStack Query key?`
 
@@ -117,15 +118,15 @@ Han Dev separates how it presents the **specification** from how it presents the
 | `--spec=chat` | No | Show the reviewable specification in chat and ask for approval. No `spec.md` is created. |
 | `--spec=markdown` | **Yes** | Save `spec.md` in the task folder before implementation; show an approval summary in chat. |
 | `--spec=both` | No | Show the specification in chat and save it as Markdown. |
-| `--docs=markdown` | **Yes** | Automatically save `implementation.md` and `learning.md` after implementation and verification. |
-| `--docs=chat` | No | Explain what changed and teach the implementation in chat without saving post-implementation files. |
+| `--docs=markdown` | **Yes** | Automatically save `implementation.md`, `code-walkthrough.md`, and `learning.md` after implementation and verification. |
+| `--docs=chat` | No | Include an impact-ordered source-code walkthrough and explanations in chat without saving post-implementation files. |
 | `--docs=both` | No | Save the documents and explain the implementation in chat. |
 
 **Normal usage — no flags necessary:**
 
 > `/han-dev Add search and status filters to the admin opportunities table.`
 
-Han Dev first saves the full specification to `.dev-docs/<task-id>/spec.md` and shows an approval summary in chat. After you approve it and implementation finishes, Han Dev **automatically saves** the implementation report and impact-aware learning lesson in that **same task folder**. You do not need to request documentation separately.
+Han Dev first saves the full specification to `.dev-docs/<task-id>/spec.md` and shows an approval summary in chat. After you approve it and implementation finishes, Han Dev **automatically saves** the implementation report, impact-ordered code walkthrough, and conceptual learning lesson in that **same task folder**. You do not need to request documentation separately.
 
 **Other combinations:**
 
@@ -146,10 +147,11 @@ todo-app/
     └── 001-search-and-filters/
         ├── spec.md
         ├── implementation.md
+        ├── code-walkthrough.md
         └── learning.md
 ```
 
-Both specification and post-implementation teaching default to Markdown, so all three files appear in **one shared task folder**. Override with `--spec=chat` to omit `spec.md`, or `--docs=chat` to omit the post-implementation files. The agent still shows a clear summary and requests explicit approval in chat, even when the full specification is saved as Markdown.
+Both specification and post-implementation teaching default to Markdown, so all **four files** appear in **one shared task folder**. Override with `--spec=chat` to omit `spec.md`, or `--docs=chat` to omit the post-implementation files. The agent still shows a clear summary and requests explicit approval in chat, even when the full specification is saved as Markdown.
 
 You can explicitly request another output destination. No Han Learn extension, MCP server, or dashboard is required. If the coding agent lacks file-writing access, it must provide the documentation in chat and say that it could not save the files.
 
@@ -175,9 +177,11 @@ An Agent Skill is a set of instructions for a compatible coding agent, **not** a
 | `references/specification-workflow.md` | How to investigate a task and write a testable specification. |
 | `references/implementation-verification.md` | How to implement safely and report checks. |
 | `references/change-analysis-and-teaching.md` | How to compare changes and teach them clearly. |
+| `references/code-walkthrough.md` | Required coverage, code excerpts, sorting, source locations, and code-reading depth. |
+| `references/impact-assessment.md` | Impact labels and explanation priorities. |
 | `references/qa-and-followups.md` | Code-grounded Q&A and prerequisite recovery. |
 | `references/storage-and-integrations.md` | Where and how task documents may be saved. |
-| `assets/` | Markdown templates for the three task documents. |
+| `assets/` | Markdown templates for the four task documents, including `code-walkthrough-template.md`. |
 
 ---
 
